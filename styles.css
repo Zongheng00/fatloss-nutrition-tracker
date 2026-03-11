@@ -1,0 +1,203 @@
+:root {
+  --bg: #f2fbf4;
+  --card: #ffffff;
+  --text: #173126;
+  --muted: #5f7a6d;
+  --brand: #2e8b57;
+  --brand-2: #d8f0df;
+  --border: #cfe8d6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "PingFang SC", "Noto Sans SC", sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at 10% 0%, #dcf5e3, var(--bg) 55%);
+}
+
+header,
+footer {
+  text-align: center;
+  padding: 14px;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 10px;
+}
+
+main {
+  width: min(980px, 96vw);
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+  padding-bottom: 24px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.inline-form,
+form {
+  display: grid;
+  gap: 8px;
+}
+
+input,
+button,
+select {
+  border: 1px solid #bedac5;
+  border-radius: 8px;
+  padding: 9px;
+  font-size: 14px;
+}
+
+#consume-food-search {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+button {
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(1.04);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.nutrient-row,
+.goal-row,
+.food-row,
+.remain-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+.food-row {
+  grid-template-columns: 1.2fr 1fr 1fr auto;
+}
+
+.food-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.btn-secondary {
+  background: #e6f5ea;
+  color: #1f5b3e;
+}
+
+.scroll-box {
+  max-height: 180px;
+  overflow: auto;
+  background: #f4fcf6;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  white-space: pre-wrap;
+}
+
+.card-lite {
+  margin-top: 12px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.inline-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.intake-log-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr auto;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+  align-items: center;
+}
+
+.hint,
+small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.modal-sheet {
+  position: relative;
+  width: min(760px, 94vw);
+  max-height: 86vh;
+  overflow: auto;
+  margin: 6vh auto 0;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 12px;
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 780px) {
+  .split,
+  .grid-3,
+  .nutrient-row,
+  .goal-row,
+  .food-row,
+  .remain-row,
+  .intake-log-row {
+    grid-template-columns: 1fr;
+  }
+}

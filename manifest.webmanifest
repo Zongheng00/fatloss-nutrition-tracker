@@ -1,0 +1,9 @@
+{
+  "name": "Fat Loss Nutrition Calculator",
+  "short_name": "FatLoss Calc",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f2fbf4",
+  "theme_color": "#2e8b57",
+  "icons": []
+}

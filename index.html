@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="theme-color" content="#2e8b57" />
+    <title>Fat Loss Nutrition Calculator</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Fat Loss Nutrition Calculator</h1>
+      <p>Offline-ready | iPhone-friendly | Local data storage</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>1) Nutrient Management (Customizable)</h2>
+        <form id="nutrient-form" class="inline-form">
+          <input id="nutrient-name" required placeholder="Nutrient name (e.g. Vitamin D)" />
+          <input id="nutrient-unit" required placeholder="Unit (e.g. g / mg / mcg)" />
+          <button type="submit">Add Nutrient</button>
+        </form>
+        <div id="nutrient-list"></div>
+      </section>
+
+      <section class="card">
+        <h2>2) Daily Goal Settings</h2>
+        <label>
+          Intake date:
+          <input type="date" id="active-date" />
+        </label>
+        <div id="goal-form-container"></div>
+        <button id="save-goal">Save Daily Goals</button>
+      </section>
+
+      <section class="card">
+        <h2>3) Log Today's Intake</h2>
+        <div class="split">
+          <div>
+            <h3>Method A: Log by Food</h3>
+            <input id="consume-food-search" type="search" placeholder="Search saved foods (type keywords)" autocomplete="off" />
+            <form id="consume-food-form">
+              <select id="consume-food-id"></select>
+              <div class="grid-3">
+                <input id="consume-amount" type="number" step="0.01" min="0" value="1" required />
+                <input id="consume-unit" placeholder="Unit (same as food base unit)" />
+                <span class="hint">Nutrients are auto-calculated by ratio</span>
+              </div>
+              <button id="consume-food-submit" type="submit">Add Intake Log</button>
+            </form>
+            <p id="consume-food-empty" class="hint"></p>
+          </div>
+
+          <div>
+            <h3>Method B: Manual Nutrient Entry</h3>
+            <form id="manual-intake-form">
+              <div id="manual-intake-inputs"></div>
+              <button type="submit">Save Manual Entry</button>
+            </form>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="card">
+        <h2>4) Today's Goal Progress & Remaining</h2>
+        <div class="card-lite">
+          <h3>Today's Intake Log Details</h3>
+          <div class="inline-actions">
+            <button id="undo-last-intake" type="button" class="btn-secondary">Undo Last Entry</button>
+            <button id="clear-day-intake" type="button">Clear Today</button>
+          </div>
+          <div id="intake-edit-panel" class="hidden">
+            <h4>Edit Intake Log</h4>
+            <form id="intake-edit-form">
+              <input id="intake-edit-source" placeholder="Entry name (e.g. Chicken Breast 120g)" />
+              <div id="intake-edit-food-fields" class="hidden">
+                <input id="intake-edit-food-name" readonly />
+                <input id="intake-edit-food-amount" type="number" step="0.01" min="0" placeholder="Intake amount" />
+              </div>
+              <div id="intake-edit-inputs"></div>
+              <div class="inline-actions">
+                <button id="intake-edit-save" type="submit">Save Changes</button>
+                <button id="intake-edit-cancel" type="button" class="btn-secondary">Cancel</button>
+              </div>
+            </form>
+          </div>
+          <div id="intake-log-list"></div>
+        </div>
+
+        <div id="remaining-panel"></div>
+      </section>
+
+      <section class="card">
+        <h2>5) Meal Suggestions</h2>
+
+        <h3>Algorithm Suggestions (Based on Saved Foods)</h3>
+        <button id="run-recommend">Generate Suggestions</button>
+        <div id="recommend-result"></div>
+
+        <h3>LLM API Planning (Optional)</h3>
+        <form id="llm-form">
+          <input id="llm-endpoint" value="https://api.openai.com" placeholder="API Endpoint" />
+          <input id="llm-model" value="gpt-4o-mini" placeholder="Model" />
+          <input id="llm-token" placeholder="API Token (saved locally)" />
+          <button type="submit">Ask LLM for Meal Suggestions</button>
+        </form>
+        <pre id="llm-result" class="scroll-box"></pre>
+      </section>
+    </main>
+
+    <div id="food-modal" class="modal hidden" aria-hidden="true">
+      <div id="food-modal-backdrop" class="modal-backdrop"></div>
+      <section class="modal-sheet" role="dialog" aria-modal="true" aria-label="Food Template Modal">
+        <div class="modal-head">
+          <h3>Add Food Template</h3>
+        </div>
+
+        <h4>Saved Food Templates</h4>
+        <div id="food-list"></div>
+
+        <h4>Create and Save New Template</h4>
+        <div class="inline-actions">
+          <button id="food-tab-manual" type="button">Manual Entry</button>
+          <button id="food-tab-ocr" type="button" class="btn-secondary">Photo OCR</button>
+        </div>
+
+        <div id="food-panel-manual">
+          <form id="food-form">
+            <input id="food-name" required placeholder="Food name" />
+            <div class="grid-3">
+              <input id="food-serving-amount" type="number" step="0.01" min="0" placeholder="100" required />
+              <input id="food-serving-unit" value="g" required />
+              <span class="hint">Base serving (e.g. 100 g)</span>
+            </div>
+            <div id="food-nutrient-inputs"></div>
+            <p id="food-form-mode" class="hint">Mode: New Template</p>
+            <div class="inline-actions">
+              <button id="food-form-submit" type="submit">Save Food Template</button>
+              <button id="food-cancel-edit" type="button" class="hidden btn-secondary">Cancel Edit</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="food-panel-ocr" class="hidden">
+          <input id="label-image" type="file" accept="image/*" capture="environment" />
+          <button id="run-ocr" type="button">Scan Label</button>
+          <pre id="ocr-text" class="scroll-box"></pre>
+          <form id="ocr-food-form">
+            <input id="ocr-food-name" placeholder="Food name" required />
+            <div class="grid-3">
+              <input id="ocr-serving-amount" type="number" step="0.01" min="0" placeholder="100" required />
+              <input id="ocr-serving-unit" value="g" required />
+              <span class="hint">You can manually adjust serving and unit after OCR</span>
+            </div>
+            <div id="ocr-nutrient-inputs"></div>
+            <button type="submit">Save OCR Template</button>
+          </form>
+        </div>
+
+      </section>
+    </div>
+
+    <footer>
+      <small id="app-version">All data is stored only in this browser (localStorage)</small>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
